@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Simulator</title>
+  <!-- Compiled and minified CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
+
+</head>
+<body>
+  <nav>
+    <div class="nav-wrapper blue darken-4">
+      <a href="#" class="brand-logo center">OSRS Combat Simulator</a>
+    </div>
+  </nav>
+  <div class="container">
+    <div class="row">
+      <!-- Game Options -->
+      <div class="col s12 m6">
+        <div class="card blue-grey darken-1">
+          <div class="card-content white-text">
+            <span class="card-title">Player 1 Stats</span>
+            <div class="row">
+              <form class="col s12">
+                <div class="row">
+                  <div class="input-field col s2">
+                    <input id="player_1_attack" type="number" class="validate" value="1">
+                    <label for="player_1_attack">Attack</label>
+                  </div>
+                  <div class="input-field col s2">
+                    <input id="player_1_strength" type="number" class="validate" value="1">
+                    <label for="player_1_strength">Strength</label>
+                  </div>
+                  <div class="input-field col s2">
+                    <input id="player_1_defence" type="number" class="validate" value="1">
+                    <label for="player_1_defence">Defence</label>
+                  </div>
+                  <div class="input-field col s2">
+                    <input id="player_1_hitpoints" type="number" class="validate" value="10">
+                    <label for="player_1_hitpoints">Hitpoints</label>
+                  </div>
+                  <div class="input-field col s3">
+                    <input id="player_1_strength_bonus" type="number" class="validate" value="0">
+                    <label for="player_1_strength_bonus">Strength Bonus</label>
+                  </div>
+                </div>
+              </form>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Pids</th>
+                    <th>Wins</th>
+                    <th>Losses</th>
+                    <th>Win Streak</th>
+                    <th>Lose Streak</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td id="player_1_pids">0</td>
+                    <td id="player_1_wins">0</td>
+                    <td id="player_1_losses">0</td>
+                    <td id="player_1_win_streak">0</td>
+                    <td id="player_1_lose_streak">0</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="card-action">
+            <a id="max_player_1" class="btn">Max Combat</a>
+          </div>
+        </div>
+      </div>
+      <div class="col s12 m6">
+        <div class="card blue-grey darken-1">
+          <div class="card-content white-text">
+            <span class="card-title">Player 2 Stats</span>
+            <div class="row">
+              <form class="col s12">
+                <div class="row">
+                  <div class="input-field col s2">
+                    <input id="player_2_attack" type="number" class="validate" value="1">
+                    <label for="player_2_attack">Attack</label>
+                  </div>
+                  <div class="input-field col s2">
+                    <input id="player_2_strength" type="number" class="validate" value="1">
+                    <label for="player_2_strength">Strength</label>
+                  </div>
+                  <div class="input-field col s2">
+                    <input id="player_2_defence" type="number" class="validate" value="1">
+                    <label for="player_2_defence">Defence</label>
+                  </div>
+                  <div class="input-field col s2">
+                    <input id="player_2_hitpoints" type="number" class="validate" value="10">
+                    <label for="player_2_hitpoints">Hitpoints</label>
+                  </div>
+                  <div class="input-field col s3">
+                    <input id="player_2_strength_bonus" type="number" class="validate" value="0">
+                    <label for="player_2_strength_bonus">Strength Bonus</label>
+                  </div>
+                </div>
+              </form>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Pids</th>
+                    <th>Wins</th>
+                    <th>Losses</th>
+                    <th>Win Streak</th>
+                    <th>Lose Streak</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td id="player_2_pids">0</td>
+                    <td id="player_2_wins">0</td>
+                    <td id="player_2_losses">0</td>
+                    <td id="player_2_win_streak">0</td>
+                    <td id="player_2_lose_streak">0</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="card-action">
+            <a id="max_player_2" class="btn">Max Combat</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col s12">
+        <div class="card-panel teal">
+          <input type="range" id="sim_speed" min="1" max="4" value="1" />
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col s12">
+        <div id="log_scroll" class="card-panel teal" style="height:200px;overflow:scroll">
+          <div class="collection" id="combat_log">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col s12">
+        <a id="simulate_button" class="waves-effect waves-light btn">Simulate</a>
+      </div>
+    </div>
+  </div>
+
+  <!--Import jQuery before materialize.js-->
+  <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+  <!-- Compiled and minified JavaScript -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+  <script type="text/javascript">
+  // Load Elements
+  var simulate_button = document.getElementById("simulate_button");
+
+  var player_1_attack = document.getElementById("player_1_attack");
+  var player_1_strength = document.getElementById("player_1_strength");
+  var player_1_defence = document.getElementById("player_1_defence");
+  var player_1_hitpoints = document.getElementById("player_1_hitpoints");
+  var player_1_strength_bonus = document.getElementById("player_2_strength_bonus");
+
+  var player_1_pids = document.getElementById("player_1_pids");
+  var player_1_wins = document.getElementById("player_1_wins");
+  var player_1_losses = document.getElementById("player_1_losses");
+  var player_1_win_streak = document.getElementById("player_1_win_streak");
+  var player_1_lose_streak = document.getElementById("player_1_lose_streak");
+
+  var player_2_pids = document.getElementById("player_2_pids");
+  var player_2_wins = document.getElementById("player_2_wins");
+  var player_2_losses = document.getElementById("player_2_losses");
+  var player_2_win_streak = document.getElementById("player_2_win_streak");
+  var player_2_lose_streak = document.getElementById("player_2_lose_streak");
+
+  var player_2_attack = document.getElementById("player_2_attack");
+  var player_2_strength = document.getElementById("player_2_strength");
+  var player_2_defence = document.getElementById("player_2_defence");
+  var player_2_hitpoints = document.getElementById("player_2_hitpoints");
+  var player_2_strength_bonus = document.getElementById("player_2_strength_bonus");
+
+  var max_player_1 = document.getElementById("max_player_1");
+  var max_player_2 = document.getElementById("max_player_2");
+
+  var combat_log = document.getElementById("combat_log");
+  var log_scroll = document.getElementById("log_scroll");
+
+  var Player = function(atk_element,str_element,def_element,hp_element,str_bns_element,pids_element,wins_element,losses_element,win_streak_element,lose_streak_element){
+    this.pids = 0;
+    this.atk = atk_element.value;
+    this.str = str_element.value;
+    this.def = def_element.value;
+    this.hp = hp_element.value;
+    this.str_bns = str_bns_element.value;
+    this.atk_element = atk_element;
+    this.str_element = str_element;
+    this.def_element = def_element;
+    this.hp_element = hp_element;
+    this.str_bns_element = str_bns_element;
+    this.wins = 0;
+    this.losses = 0;
+    this.win_streak = 0;
+    this.lose_streak = 0;
+    this.current_win_streak = 0;
+    this.current_lose_streak = 0;
+    this.last_streak = null;
+    this.pids_element = pids_element;
+    this.wins_element = wins_element;
+    this.losses_element = losses_element;
+    this.win_streak_element = win_streak_element;
+    this.lose_streak_element = lose_streak_element;
+  }
+
+  Player.prototype.max = function(){
+    this.atk = 99;
+    this.str = 99;
+    this.def = 99;
+    this.hp = 99;
+    this.atk_element.value = this.atk;
+    this.def_element.value = this.def;
+    this.str_element.value = this.str;
+    this.hp_element.value = this.hp;
+  }
+
+  Player.prototype.win = function(){
+    this.hp=this.hp_element.value;
+    this.wins++;
+    if(this.last=="win"){
+      this.current_win_streak++;
+      if(this.current_win_streak>this.win_streak){
+        this.win_streak=this.current_win_streak;
+        this.win_streak_element.innerText = this.win_streak;
+      }
+    } else {
+      this.current_win_streak = 1;
+      this.last="win";
+    }
+    this.wins_element.innerText = this.wins;
+  }
+
+  Player.prototype.lose = function(){
+    this.hp=this.hp_element.value;
+    this.losses++;
+    if(this.last=="lose"){
+      this.current_lose_streak++;
+      if(this.current_lose_streak>this.lose_streak){
+        this.lose_streak=this.current_lose_streak;
+        this.lose_streak_element.innerText = this.lose_streak;
+      }
+    } else {
+      this.current_lose_streak = 1;
+      this.last="lose";
+    }
+    this.losses_element.innerText = this.losses;
+  }
+
+  Player.prototype.isDead = function(){
+    return this.hp<1;
+  }
+
+  var player_1 = new Player(player_1_attack,player_1_strength,player_1_defence,player_1_hitpoints,player_1_strength_bonus,player_1_pids,player_1_wins,player_1_losses,player_1_win_streak,player_1_lose_streak);
+  var player_2 = new Player(player_2_attack,player_2_strength,player_2_defence,player_2_hitpoints,player_2_strength_bonus,player_2_pids,player_2_wins,player_2_losses,player_2_win_streak,player_2_lose_streak);
+
+  max_player_1.addEventListener("click", function(){
+    player_1.max();
+  })
+  max_player_2.addEventListener("click", function(){
+    player_2.max();
+  })
+
+  simulate_button.addEventListener("click",function(){
+    player_1 = new Player(player_1_attack,player_1_strength,player_1_defence,player_1_hitpoints,player_1_strength_bonus,player_1_pids,player_1_wins,player_1_losses,player_1_win_streak,player_1_lose_streak);
+    player_2 = new Player(player_2_attack,player_2_strength,player_2_defence,player_2_hitpoints,player_2_strength_bonus,player_2_pids,player_2_wins,player_2_losses,player_2_win_streak,player_2_lose_streak);
+    var sim_speed = document.getElementById("sim_speed").value;
+    var intervalSpeed = 2400;
+    if(sim_speed==4){
+      intervalSpeed = 1;
+    } else if (sim_speed==3){
+      intervalSpeed = 1600;
+    } else if (sim_speed==2){
+      intervalSpeed = 800;
+    }
+    var fights = 0;
+    var goal = 10000;
+    var player_1_accuracy = calculateAccuracy(player_1.atk,player_2.def);
+    console.log("Player 1 Accuracy: " + player_1_accuracy);
+    var player_2_accuracy = calculateAccuracy(player_2.atk,player_1.def);
+    console.log("Player 2 Accuracy: " + player_2_accuracy);
+    var player_1_max_hit = calculateMax(player_1.str,player_1.str_bns);
+    console.log("Player 1 Max Hit: " + player_1_max_hit);
+    var player_2_max_hit = calculateMax(player_2.str,player_2.str_bns);
+    console.log("Player 2 Max Hit: " + player_2_max_hit);
+    // Pid
+    var hits = 0;
+    var current_fight = null;
+    var duel = setInterval(function(){
+      if(fights<goal){
+        if(fights!=current_fight){
+          current_fight=fights;
+          hits = getRandomIntInclusive(0,1);
+          if(hits){
+            combatLog("Player 2 gets pid");
+            player_2.pids++;
+            player_2.pids_element.innerText = player_2.pids;
+          } else {
+            combatLog("Player 1 gets pid");
+            player_1.pids++;
+            player_1.pids_element.innerText = player_1.pids;
+          }
+        }
+        if(hits%2==0){
+          // Player 1 fights
+          if(Math.random()<player_1_accuracy){
+            // Hit
+            var hit = getRandomIntInclusive(1,player_1_max_hit);
+            player_2.hp-=hit;
+            if(player_2.hp<0){
+              player_2.hp=0;
+            }
+            combatLog("Player 1 hit " + hit + '. Player 2 hitpoints: ' + player_2.hp,"red");
+            // Is Player 2 alive
+            if(player_2.isDead()){
+              combatLog("Player 2 died","black")
+              player_1.win();
+              player_2.lose();
+              fights++;
+            }
+          } else {
+            combatLog("Player 1 missed","blue");
+          }
+        } else {
+          // Player 2 fights
+          if(Math.random()<player_2_accuracy){
+            // Hit
+            var hit = getRandomIntInclusive(1,player_2_max_hit);
+            player_1.hp-=hit;
+            if(player_1.hp<0){
+              player_1.hp=0;
+            }
+            combatLog("Player 2 hit " + hit + '. Player 1 hitpoints: ' + player_1.hp,"red");
+            // Is Player 2 alive
+            if(player_1.isDead()){
+              combatLog("Player 1 died","black")
+              player_2.win();
+              player_1.lose();
+              fights++;
+            }
+          } else {
+            combatLog("Player 2 missed","blue");
+          }
+        }
+        hits++;
+      } else {
+        stopDueling();
+      }
+    },intervalSpeed);
+    var stopDueling = function(){
+      clearInterval(duel);
+    }
+  });
+
+  var combatLog = function(text,colour){
+    var item = document.createElement('p');
+    item.classList.add('collection-item');
+    if(colour){
+      item.classList.add(colour);
+      item.classList.add('white-text');
+    } else {
+      item.classList.add('black-text');
+    }
+    item.innerText = text;
+    combat_log.appendChild(item);
+    log_scroll.scrollTop = log_scroll.scrollHeight;
+  }
+
+  var getRandomIntInclusive = function(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1)) + min; //The maximum is inclusive and the minimum is inclusive
+  }
+
+  var calculateMax = function(str, str_bonus){
+    var a = Number(str_bonus) + 64;
+    var b = a * str;
+    var c = b/640;
+    return c + 0.5;
+  }
+
+  var calculateAccuracy = function(atk,def){
+    var a = Number(def)+1;
+    var b = a*2;
+    return atk/b;
+  }
+  </script>
+</body>
+</html>
